@@ -1,5 +1,5 @@
-#include <helix/d3d11/d3d11.h>
-#include <helix/testing/test.h>
+#include <Helix/D3D11/D3D11.h>
+#include <Helix/Testing/Test.h>
 
 #include <cstdio>
 #include <cstring>

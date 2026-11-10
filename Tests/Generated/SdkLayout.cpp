@@ -1,5 +1,5 @@
 #include <cstring>
-#include <helix/d3d11/d3d11.h>
+#include <Helix/D3D11/D3D11.h>
 
 #define D3D11_NO_HELPERS
 #define CINTERFACE

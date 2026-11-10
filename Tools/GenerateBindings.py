@@ -6,8 +6,8 @@ Usage: python tools/generate.py
 import re
 from pathlib import Path
 
-from interfaces import INTERFACES
-from d3d_types import CONSTANTS, ENUMS, STRUCTS
+from Interfaces import INTERFACES
+from D3DTypes import CONSTANTS, ENUMS, STRUCTS
 
 ROOT = Path(__file__).resolve().parent.parent
 ENUM_ALIASES = {"D3D_SRV_DIMENSION": "D3D11_SRV_DIMENSION", "D3D_PRIMITIVE_TOPOLOGY": "D3D11_PRIMITIVE_TOPOLOGY"}
@@ -207,10 +207,10 @@ def main():
     h.append("    }")
     h.append("}")
     h.append("")
-    (ROOT / "include" / "helix" / "d3d11").mkdir(parents=True, exist_ok=True)
-    (ROOT / "include" / "helix" / "d3d11" / "d3d11.h").write_text("\n".join(h), encoding="ascii", newline="\n")
+    (ROOT / "Source" / "Helix" / "D3D11").mkdir(parents=True, exist_ok=True)
+    (ROOT / "Source" / "Helix" / "D3D11" / "D3D11.h").write_text("\n".join(h), encoding="ascii", newline="\n")
 
-    t = ["#include <helix/d3d11/d3d11.h>", "", "#define D3D11_NO_HELPERS", "#define CINTERFACE", "#define COBJMACROS", "#include <d3d11_1.h>", "#include <d3d11sdklayers.h>",
+    t = ["#include <Helix/D3D11/D3D11.h>", "", "#define D3D11_NO_HELPERS", "#define CINTERFACE", "#define COBJMACROS", "#include <d3d11_1.h>", "#include <d3d11sdklayers.h>",
          "#include <dxgi1_5.h>", "", "#include <cstddef>", "", "namespace hx = helix::d3d11;", ""]
     for name, base, iid, _ in INTERFACES:
         if name == "IUnknown":
@@ -241,17 +241,17 @@ def main():
         t.append(f"    out[{i}] = (unsigned long long)({n});")
     t.append("}")
     t.append("")
-    o = ["#include <helix/d3d11/d3d11.h>", "", f"int HelixD3D11ConstantCount() {{ return {len(CONSTANTS)}; }}", "",
+    o = ["#include <Helix/D3D11/D3D11.h>", "", f"int HelixD3D11ConstantCount() {{ return {len(CONSTANTS)}; }}", "",
          "void HelixD3D11OurConstants(unsigned long long* out, const char** names)", "{"]
     for i, (_, n, _) in enumerate(CONSTANTS):
         o.append(f"    out[{i}] = (unsigned long long)(helix::d3d11::{n});")
         o.append(f'    names[{i}] = "{n}";')
     o.append("}")
     o.append("")
-    gen = ROOT / "tests" / "generated"
+    gen = ROOT / "Tests" / "Generated"
     gen.mkdir(parents=True, exist_ok=True)
-    (gen / "sdk_layout.cpp").write_text("\n".join(["#include <cstring>"] + t), encoding="ascii", newline="\n")
-    (gen / "our_constants.cpp").write_text("\n".join(o), encoding="ascii", newline="\n")
+    (gen / "SdkLayout.cpp").write_text("\n".join(["#include <cstring>"] + t), encoding="ascii", newline="\n")
+    (gen / "OurConstants.cpp").write_text("\n".join(o), encoding="ascii", newline="\n")
     print(f"{len(INTERFACES)} interfaces, {sum(len(flatten(i[0], by_name)) for i in INTERFACES)} vtable slots, "
           f"{len(STRUCTS)} structs, {sum(len(e[1]) for e in ENUMS)} enum values, {len(CONSTANTS)} constants")
 

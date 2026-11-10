@@ -6,17 +6,17 @@ Direct3D 11.1 and DXGI 1.5 bindings for C++ without the Windows SDK headers, rel
 
 | Path | Content |
 |---|---|
-| `include/helix/d3d11/d3d11.h` | Base Windows types, `GUID`, enums, structs, constants and 56 COM interfaces (D3D11 device, contexts, resources, views, shaders, states, queries, 11.1 extensions, user annotations, DXGI objects, adapters, devices, swap chains 0 to 3, factories 0 to 5) |
-| `src/platform/windows/loader.cpp` | Runtime loading of `d3d11.dll` and `dxgi.dll` |
-| `tools/interfaces.py`, `tools/d3d_types.py` | Interface, enum and struct descriptions |
-| `tools/generate.py` | Generates the header and the layout tests |
-| `tests/` | Layout tests against the Windows SDK and a device test |
+| `Source/Helix/D3D11/D3D11.h` | Base Windows types, `GUID`, enums, structs, constants and 56 COM interfaces (D3D11 device, contexts, resources, views, shaders, states, queries, 11.1 extensions, user annotations, DXGI objects, adapters, devices, swap chains 0 to 3, factories 0 to 5) |
+| `Source/Helix/D3D11/Platform/Win/LoaderWin.cpp` | Runtime loading of `d3d11.dll` and `dxgi.dll` |
+| `Tools/Interfaces.py`, `Tools/D3DTypes.py` | Interface, enum and struct descriptions |
+| `Tools/GenerateBindings.py` | Generates the header and the layout tests |
+| `Tests/` | Layout tests against the Windows SDK and a device test |
 
 Everything lives in `helix::d3d11` and keeps the documented names, so the API reads like the
 official one:
 
 ```cpp
-#include <helix/d3d11/d3d11.h>
+#include <Helix/D3D11/D3D11.h>
 using namespace helix::d3d11;
 
 ID3D11Device* device = nullptr;
@@ -41,7 +41,7 @@ at runtime. The SDK is only used by the tests.
 ## Regenerating
 
 ```
-python tools/generate.py
+python Tools/GenerateBindings.py
 ```
 
 ## Build
