@@ -47,7 +47,8 @@ python Tools/GenerateBindings.py
 ## Build
 
 ```
-git clone --recursive https://github.com/kisstp2006/Helix.D3D11
+git clone https://github.com/kisstp2006/Helix.D3D11
+git -C Helix.D3D11 submodule update --init
 cmake --preset windows-debug
 cmake --build --preset windows-debug
 ctest --preset windows-debug
