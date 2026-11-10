@@ -1,0 +1,18 @@
+cmake_minimum_required(VERSION 3.28)
+project(Helix.D3D11 LANGUAGES CXX)
+
+if(NOT COMMAND helix_add_library)
+    include("${CMAKE_CURRENT_SOURCE_DIR}/external/Helix.CMake/Helix.cmake")
+endif()
+
+if(HELIX_PLATFORM STREQUAL "windows")
+    helix_add_library(helix_d3d11 ALIAS D3D11)
+    helix_add_test_suite(helix_d3d11_tests DEPS Helix::D3D11)
+    if(TARGET helix_d3d11_tests)
+        target_link_libraries(helix_d3d11_tests PRIVATE dxguid uuid)
+    endif()
+else()
+    add_library(helix_d3d11 INTERFACE)
+    add_library(Helix::D3D11 ALIAS helix_d3d11)
+    target_include_directories(helix_d3d11 INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+endif()
