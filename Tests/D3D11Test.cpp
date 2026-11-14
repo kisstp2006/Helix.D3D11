@@ -95,7 +95,8 @@ HX_TEST(D3D11Bindings, RenderAndReadBack)
     unsigned pixel;
     std::memcpy(&pixel, mapped.pData, 4);
     context->Unmap(staging, 0);
-    HX_CHECK_EQ(pixel, 0xff0080ffu);
+    // 0.5 is 127.5 in 8 bits: a device may round either way.
+    HX_CHECK(pixel == 0xff0080ffu || pixel == 0xff007fffu);
 
     D3D11_BUFFER_DESC bd{256, D3D11_USAGE_DYNAMIC, D3D11_BIND_CONSTANT_BUFFER, D3D11_CPU_ACCESS_WRITE, 0, 0};
     ID3D11Buffer* buffer = nullptr;

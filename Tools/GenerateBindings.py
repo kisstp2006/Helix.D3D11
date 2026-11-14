@@ -210,7 +210,7 @@ def main():
     (ROOT / "Source" / "Helix" / "D3D11").mkdir(parents=True, exist_ok=True)
     (ROOT / "Source" / "Helix" / "D3D11" / "D3D11.h").write_text("\n".join(h), encoding="ascii", newline="\n")
 
-    t = ["#include <Helix/D3D11/D3D11.h>", "", "#define D3D11_NO_HELPERS", "#define CINTERFACE", "#define COBJMACROS", "#include <d3d11_1.h>", "#include <d3d11sdklayers.h>",
+    t = ["#include <Helix/D3D11/D3D11.h>", "", "#define D3D11_NO_HELPERS", "#define CINTERFACE", "#define COBJMACROS", "#include <d3d11_3.h>", "#include <d3d11sdklayers.h>",
          "#include <dxgi1_5.h>", "", "#include <cstddef>", "", "namespace hx = helix::d3d11;", ""]
     for name, base, iid, _ in INTERFACES:
         if name == "IUnknown":

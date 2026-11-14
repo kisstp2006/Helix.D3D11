@@ -1,12 +1,12 @@
 # Helix.D3D11
 
-Direct3D 11.1 and DXGI 1.5 bindings for C++ without the Windows SDK headers, released under CC0.
+Direct3D 11.1 to 11.3 and DXGI 1.5 bindings for C++ without the Windows SDK headers, released under CC0.
 
 ## Contents
 
 | Path | Content |
 |---|---|
-| `Source/Helix/D3D11/D3D11.h` | Base Windows types, `GUID`, enums, structs, constants and 56 COM interfaces (D3D11 device, contexts, resources, views, shaders, states, queries, 11.1 extensions, user annotations, DXGI objects, adapters, devices, swap chains 0 to 3, factories 0 to 5) |
+| `Source/Helix/D3D11/D3D11.h` | Base Windows types, `GUID`, enums, structs, constants and 58 COM interfaces (D3D11 device, contexts, resources, views, shaders, states, queries, 11.1 extensions, the 11.2 and 11.3 devices (conservative rasterization), user annotations, DXGI objects, adapters, devices, swap chains 0 to 3, factories 0 to 5) |
 | `Source/Helix/D3D11/Platform/Win/LoaderWin.cpp` | Runtime loading of `d3d11.dll` and `dxgi.dll` |
 | `Tools/Interfaces.py`, `Tools/D3DTypes.py` | Interface, enum and struct descriptions |
 | `Tools/GenerateBindings.py` | Generates the header and the layout tests |

@@ -707,6 +707,28 @@ namespace helix::d3d11
         DXGI_ADAPTER_FLAG_SOFTWARE = 2,
     };
 
+    enum D3D11_CONSERVATIVE_RASTERIZATION_MODE : int
+    {
+        D3D11_CONSERVATIVE_RASTERIZATION_MODE_OFF = 0,
+        D3D11_CONSERVATIVE_RASTERIZATION_MODE_ON = 1,
+    };
+
+    enum D3D11_CONSERVATIVE_RASTERIZATION_TIER : int
+    {
+        D3D11_CONSERVATIVE_RASTERIZATION_NOT_SUPPORTED = 0,
+        D3D11_CONSERVATIVE_RASTERIZATION_TIER_1 = 1,
+        D3D11_CONSERVATIVE_RASTERIZATION_TIER_2 = 2,
+        D3D11_CONSERVATIVE_RASTERIZATION_TIER_3 = 3,
+    };
+
+    enum D3D11_TILED_RESOURCES_TIER : int
+    {
+        D3D11_TILED_RESOURCES_NOT_SUPPORTED = 0,
+        D3D11_TILED_RESOURCES_TIER_1 = 1,
+        D3D11_TILED_RESOURCES_TIER_2 = 2,
+        D3D11_TILED_RESOURCES_TIER_3 = 3,
+    };
+
     inline constexpr UINT DXGI_USAGE_SHADER_INPUT = 0x00000010;
     inline constexpr UINT DXGI_USAGE_RENDER_TARGET_OUTPUT = 0x00000020;
     inline constexpr UINT DXGI_USAGE_BACK_BUFFER = 0x00000040;
@@ -1456,6 +1478,34 @@ namespace helix::d3d11
         BOOL ExtendedResourceSharing;
     };
 
+    struct D3D11_RASTERIZER_DESC2
+    {
+        D3D11_FILL_MODE FillMode;
+        D3D11_CULL_MODE CullMode;
+        BOOL FrontCounterClockwise;
+        INT DepthBias;
+        FLOAT DepthBiasClamp;
+        FLOAT SlopeScaledDepthBias;
+        BOOL DepthClipEnable;
+        BOOL ScissorEnable;
+        BOOL MultisampleEnable;
+        BOOL AntialiasedLineEnable;
+        UINT ForcedSampleCount;
+        D3D11_CONSERVATIVE_RASTERIZATION_MODE ConservativeRaster;
+    };
+
+    struct D3D11_FEATURE_DATA_D3D11_OPTIONS2
+    {
+        BOOL PSSpecifiedStencilRefSupported;
+        BOOL TypedUAVLoadAdditionalFormats;
+        BOOL ROVsSupported;
+        D3D11_CONSERVATIVE_RASTERIZATION_TIER ConservativeRasterizationTier;
+        D3D11_TILED_RESOURCES_TIER TiledResourcesTier;
+        BOOL MapOnDefaultTextures;
+        BOOL StandardSwizzle;
+        BOOL UnifiedMemoryArchitecture;
+    };
+
     struct IUnknown;
     struct ID3D11DeviceChild;
     struct ID3D11DepthStencilState;
@@ -1493,6 +1543,8 @@ namespace helix::d3d11
     struct ID3DDeviceContextState;
     struct ID3D11DeviceContext1;
     struct ID3D11Device1;
+    struct ID3D11Device2;
+    struct ID3D11Device3;
     struct ID3DUserDefinedAnnotation;
     struct IDXGIObject;
     struct IDXGIDeviceSubObject;
@@ -2715,6 +2767,160 @@ namespace helix::d3d11
         HRESULT CreateDeviceContextState(UINT flags, const D3D_FEATURE_LEVEL* levels, UINT levelCount, UINT sdkVersion, const GUID& emulatedInterface, D3D_FEATURE_LEVEL* chosenLevel, ID3DDeviceContextState** state) { return static_cast<const Vtbl*>(vtbl_)->CreateDeviceContextState(this, flags, levels, levelCount, sdkVersion, emulatedInterface, chosenLevel, state); }
         HRESULT OpenSharedResource1(HANDLE resource, const GUID& riid, void** object) { return static_cast<const Vtbl*>(vtbl_)->OpenSharedResource1(this, resource, riid, object); }
         HRESULT OpenSharedResourceByName(LPCWSTR name, DWORD access, const GUID& riid, void** object) { return static_cast<const Vtbl*>(vtbl_)->OpenSharedResourceByName(this, name, access, riid, object); }
+    };
+
+    struct ID3D11Device2 : ID3D11Device1
+    {
+        static constexpr GUID Iid = {0x9d06dffa, 0xd1e5, 0x4d07, {0x83, 0xa8, 0x1b, 0xb1, 0x23, 0xf2, 0xf8, 0x41}};
+
+        struct Vtbl
+        {
+            HRESULT(HX_D3D_CALL* QueryInterface)(void* self, const GUID& riid, void** object);
+            ULONG(HX_D3D_CALL* AddRef)(void* self);
+            ULONG(HX_D3D_CALL* Release)(void* self);
+            HRESULT(HX_D3D_CALL* CreateBuffer)(void* self, const D3D11_BUFFER_DESC* desc, const D3D11_SUBRESOURCE_DATA* data, ID3D11Buffer** buffer);
+            HRESULT(HX_D3D_CALL* CreateTexture1D)(void* self, const D3D11_TEXTURE1D_DESC* desc, const D3D11_SUBRESOURCE_DATA* data, ID3D11Texture1D** texture);
+            HRESULT(HX_D3D_CALL* CreateTexture2D)(void* self, const D3D11_TEXTURE2D_DESC* desc, const D3D11_SUBRESOURCE_DATA* data, ID3D11Texture2D** texture);
+            HRESULT(HX_D3D_CALL* CreateTexture3D)(void* self, const D3D11_TEXTURE3D_DESC* desc, const D3D11_SUBRESOURCE_DATA* data, ID3D11Texture3D** texture);
+            HRESULT(HX_D3D_CALL* CreateShaderResourceView)(void* self, ID3D11Resource* resource, const D3D11_SHADER_RESOURCE_VIEW_DESC* desc, ID3D11ShaderResourceView** view);
+            HRESULT(HX_D3D_CALL* CreateUnorderedAccessView)(void* self, ID3D11Resource* resource, const D3D11_UNORDERED_ACCESS_VIEW_DESC* desc, ID3D11UnorderedAccessView** view);
+            HRESULT(HX_D3D_CALL* CreateRenderTargetView)(void* self, ID3D11Resource* resource, const D3D11_RENDER_TARGET_VIEW_DESC* desc, ID3D11RenderTargetView** view);
+            HRESULT(HX_D3D_CALL* CreateDepthStencilView)(void* self, ID3D11Resource* resource, const D3D11_DEPTH_STENCIL_VIEW_DESC* desc, ID3D11DepthStencilView** view);
+            HRESULT(HX_D3D_CALL* CreateInputLayout)(void* self, const D3D11_INPUT_ELEMENT_DESC* elements, UINT count, const void* bytecode, SIZE_T bytecodeLength, ID3D11InputLayout** layout);
+            HRESULT(HX_D3D_CALL* CreateVertexShader)(void* self, const void* bytecode, SIZE_T bytecodeLength, ID3D11ClassLinkage* linkage, ID3D11VertexShader** shader);
+            HRESULT(HX_D3D_CALL* CreateGeometryShader)(void* self, const void* bytecode, SIZE_T bytecodeLength, ID3D11ClassLinkage* linkage, ID3D11GeometryShader** shader);
+            HRESULT(HX_D3D_CALL* CreateGeometryShaderWithStreamOutput)(void* self, const void* bytecode, SIZE_T bytecodeLength, const D3D11_SO_DECLARATION_ENTRY* entries, UINT entryCount, const UINT* strides, UINT strideCount, UINT rasterizedStream, ID3D11ClassLinkage* linkage, ID3D11GeometryShader** shader);
+            HRESULT(HX_D3D_CALL* CreatePixelShader)(void* self, const void* bytecode, SIZE_T bytecodeLength, ID3D11ClassLinkage* linkage, ID3D11PixelShader** shader);
+            HRESULT(HX_D3D_CALL* CreateHullShader)(void* self, const void* bytecode, SIZE_T bytecodeLength, ID3D11ClassLinkage* linkage, ID3D11HullShader** shader);
+            HRESULT(HX_D3D_CALL* CreateDomainShader)(void* self, const void* bytecode, SIZE_T bytecodeLength, ID3D11ClassLinkage* linkage, ID3D11DomainShader** shader);
+            HRESULT(HX_D3D_CALL* CreateComputeShader)(void* self, const void* bytecode, SIZE_T bytecodeLength, ID3D11ClassLinkage* linkage, ID3D11ComputeShader** shader);
+            HRESULT(HX_D3D_CALL* CreateClassLinkage)(void* self, ID3D11ClassLinkage** linkage);
+            HRESULT(HX_D3D_CALL* CreateBlendState)(void* self, const D3D11_BLEND_DESC* desc, ID3D11BlendState** state);
+            HRESULT(HX_D3D_CALL* CreateDepthStencilState)(void* self, const D3D11_DEPTH_STENCIL_DESC* desc, ID3D11DepthStencilState** state);
+            HRESULT(HX_D3D_CALL* CreateRasterizerState)(void* self, const D3D11_RASTERIZER_DESC* desc, ID3D11RasterizerState** state);
+            HRESULT(HX_D3D_CALL* CreateSamplerState)(void* self, const D3D11_SAMPLER_DESC* desc, ID3D11SamplerState** state);
+            HRESULT(HX_D3D_CALL* CreateQuery)(void* self, const D3D11_QUERY_DESC* desc, ID3D11Query** query);
+            HRESULT(HX_D3D_CALL* CreatePredicate)(void* self, const D3D11_QUERY_DESC* desc, ID3D11Predicate** predicate);
+            HRESULT(HX_D3D_CALL* CreateCounter)(void* self, const D3D11_COUNTER_DESC* desc, ID3D11Counter** counter);
+            HRESULT(HX_D3D_CALL* CreateDeferredContext)(void* self, UINT flags, ID3D11DeviceContext** context);
+            HRESULT(HX_D3D_CALL* OpenSharedResource)(void* self, HANDLE resource, const GUID& riid, void** object);
+            HRESULT(HX_D3D_CALL* CheckFormatSupport)(void* self, DXGI_FORMAT format, UINT* support);
+            HRESULT(HX_D3D_CALL* CheckMultisampleQualityLevels)(void* self, DXGI_FORMAT format, UINT sampleCount, UINT* levels);
+            void(HX_D3D_CALL* CheckCounterInfo)(void* self, D3D11_COUNTER_INFO* info);
+            HRESULT(HX_D3D_CALL* CheckCounter)(void* self, const D3D11_COUNTER_DESC* desc, D3D11_COUNTER_TYPE* type, UINT* activeCounters, LPSTR name, UINT* nameLength, LPSTR units, UINT* unitsLength, LPSTR description, UINT* descriptionLength);
+            HRESULT(HX_D3D_CALL* CheckFeatureSupport)(void* self, D3D11_FEATURE feature, void* data, UINT dataSize);
+            HRESULT(HX_D3D_CALL* GetPrivateData)(void* self, const GUID& guid, UINT* dataSize, void* data);
+            HRESULT(HX_D3D_CALL* SetPrivateData)(void* self, const GUID& guid, UINT dataSize, const void* data);
+            HRESULT(HX_D3D_CALL* SetPrivateDataInterface)(void* self, const GUID& guid, IUnknown* data);
+            D3D_FEATURE_LEVEL(HX_D3D_CALL* GetFeatureLevel)(void* self);
+            UINT(HX_D3D_CALL* GetCreationFlags)(void* self);
+            HRESULT(HX_D3D_CALL* GetDeviceRemovedReason)(void* self);
+            void(HX_D3D_CALL* GetImmediateContext)(void* self, ID3D11DeviceContext** context);
+            HRESULT(HX_D3D_CALL* SetExceptionMode)(void* self, UINT flags);
+            UINT(HX_D3D_CALL* GetExceptionMode)(void* self);
+            void(HX_D3D_CALL* GetImmediateContext1)(void* self, ID3D11DeviceContext1** context);
+            HRESULT(HX_D3D_CALL* CreateDeferredContext1)(void* self, UINT flags, ID3D11DeviceContext1** context);
+            HRESULT(HX_D3D_CALL* CreateBlendState1)(void* self, const D3D11_BLEND_DESC1* desc, ID3D11BlendState1** state);
+            HRESULT(HX_D3D_CALL* CreateRasterizerState1)(void* self, const D3D11_RASTERIZER_DESC1* desc, ID3D11RasterizerState1** state);
+            HRESULT(HX_D3D_CALL* CreateDeviceContextState)(void* self, UINT flags, const D3D_FEATURE_LEVEL* levels, UINT levelCount, UINT sdkVersion, const GUID& emulatedInterface, D3D_FEATURE_LEVEL* chosenLevel, ID3DDeviceContextState** state);
+            HRESULT(HX_D3D_CALL* OpenSharedResource1)(void* self, HANDLE resource, const GUID& riid, void** object);
+            HRESULT(HX_D3D_CALL* OpenSharedResourceByName)(void* self, LPCWSTR name, DWORD access, const GUID& riid, void** object);
+            void(HX_D3D_CALL* GetImmediateContext2)(void* self, void** context);
+            HRESULT(HX_D3D_CALL* CreateDeferredContext2)(void* self, UINT flags, void** context);
+            void(HX_D3D_CALL* GetResourceTiling)(void* self, ID3D11Resource* resource, UINT* tileCount, void* packedMipDesc, void* standardTileShape, UINT* subresourceTilingCount, UINT firstSubresource, void* subresourceTilings);
+            HRESULT(HX_D3D_CALL* CheckMultisampleQualityLevels1)(void* self, DXGI_FORMAT format, UINT sampleCount, UINT flags, UINT* qualityLevels);
+        };
+
+        void GetImmediateContext2(void** context) { static_cast<const Vtbl*>(vtbl_)->GetImmediateContext2(this, context); }
+        HRESULT CreateDeferredContext2(UINT flags, void** context) { return static_cast<const Vtbl*>(vtbl_)->CreateDeferredContext2(this, flags, context); }
+        void GetResourceTiling(ID3D11Resource* resource, UINT* tileCount, void* packedMipDesc, void* standardTileShape, UINT* subresourceTilingCount, UINT firstSubresource, void* subresourceTilings) { static_cast<const Vtbl*>(vtbl_)->GetResourceTiling(this, resource, tileCount, packedMipDesc, standardTileShape, subresourceTilingCount, firstSubresource, subresourceTilings); }
+        HRESULT CheckMultisampleQualityLevels1(DXGI_FORMAT format, UINT sampleCount, UINT flags, UINT* qualityLevels) { return static_cast<const Vtbl*>(vtbl_)->CheckMultisampleQualityLevels1(this, format, sampleCount, flags, qualityLevels); }
+    };
+
+    struct ID3D11Device3 : ID3D11Device2
+    {
+        static constexpr GUID Iid = {0xa05c8c37, 0xd2c6, 0x4732, {0xb3, 0xa0, 0x9c, 0xe0, 0xb0, 0xdc, 0x9a, 0xe6}};
+
+        struct Vtbl
+        {
+            HRESULT(HX_D3D_CALL* QueryInterface)(void* self, const GUID& riid, void** object);
+            ULONG(HX_D3D_CALL* AddRef)(void* self);
+            ULONG(HX_D3D_CALL* Release)(void* self);
+            HRESULT(HX_D3D_CALL* CreateBuffer)(void* self, const D3D11_BUFFER_DESC* desc, const D3D11_SUBRESOURCE_DATA* data, ID3D11Buffer** buffer);
+            HRESULT(HX_D3D_CALL* CreateTexture1D)(void* self, const D3D11_TEXTURE1D_DESC* desc, const D3D11_SUBRESOURCE_DATA* data, ID3D11Texture1D** texture);
+            HRESULT(HX_D3D_CALL* CreateTexture2D)(void* self, const D3D11_TEXTURE2D_DESC* desc, const D3D11_SUBRESOURCE_DATA* data, ID3D11Texture2D** texture);
+            HRESULT(HX_D3D_CALL* CreateTexture3D)(void* self, const D3D11_TEXTURE3D_DESC* desc, const D3D11_SUBRESOURCE_DATA* data, ID3D11Texture3D** texture);
+            HRESULT(HX_D3D_CALL* CreateShaderResourceView)(void* self, ID3D11Resource* resource, const D3D11_SHADER_RESOURCE_VIEW_DESC* desc, ID3D11ShaderResourceView** view);
+            HRESULT(HX_D3D_CALL* CreateUnorderedAccessView)(void* self, ID3D11Resource* resource, const D3D11_UNORDERED_ACCESS_VIEW_DESC* desc, ID3D11UnorderedAccessView** view);
+            HRESULT(HX_D3D_CALL* CreateRenderTargetView)(void* self, ID3D11Resource* resource, const D3D11_RENDER_TARGET_VIEW_DESC* desc, ID3D11RenderTargetView** view);
+            HRESULT(HX_D3D_CALL* CreateDepthStencilView)(void* self, ID3D11Resource* resource, const D3D11_DEPTH_STENCIL_VIEW_DESC* desc, ID3D11DepthStencilView** view);
+            HRESULT(HX_D3D_CALL* CreateInputLayout)(void* self, const D3D11_INPUT_ELEMENT_DESC* elements, UINT count, const void* bytecode, SIZE_T bytecodeLength, ID3D11InputLayout** layout);
+            HRESULT(HX_D3D_CALL* CreateVertexShader)(void* self, const void* bytecode, SIZE_T bytecodeLength, ID3D11ClassLinkage* linkage, ID3D11VertexShader** shader);
+            HRESULT(HX_D3D_CALL* CreateGeometryShader)(void* self, const void* bytecode, SIZE_T bytecodeLength, ID3D11ClassLinkage* linkage, ID3D11GeometryShader** shader);
+            HRESULT(HX_D3D_CALL* CreateGeometryShaderWithStreamOutput)(void* self, const void* bytecode, SIZE_T bytecodeLength, const D3D11_SO_DECLARATION_ENTRY* entries, UINT entryCount, const UINT* strides, UINT strideCount, UINT rasterizedStream, ID3D11ClassLinkage* linkage, ID3D11GeometryShader** shader);
+            HRESULT(HX_D3D_CALL* CreatePixelShader)(void* self, const void* bytecode, SIZE_T bytecodeLength, ID3D11ClassLinkage* linkage, ID3D11PixelShader** shader);
+            HRESULT(HX_D3D_CALL* CreateHullShader)(void* self, const void* bytecode, SIZE_T bytecodeLength, ID3D11ClassLinkage* linkage, ID3D11HullShader** shader);
+            HRESULT(HX_D3D_CALL* CreateDomainShader)(void* self, const void* bytecode, SIZE_T bytecodeLength, ID3D11ClassLinkage* linkage, ID3D11DomainShader** shader);
+            HRESULT(HX_D3D_CALL* CreateComputeShader)(void* self, const void* bytecode, SIZE_T bytecodeLength, ID3D11ClassLinkage* linkage, ID3D11ComputeShader** shader);
+            HRESULT(HX_D3D_CALL* CreateClassLinkage)(void* self, ID3D11ClassLinkage** linkage);
+            HRESULT(HX_D3D_CALL* CreateBlendState)(void* self, const D3D11_BLEND_DESC* desc, ID3D11BlendState** state);
+            HRESULT(HX_D3D_CALL* CreateDepthStencilState)(void* self, const D3D11_DEPTH_STENCIL_DESC* desc, ID3D11DepthStencilState** state);
+            HRESULT(HX_D3D_CALL* CreateRasterizerState)(void* self, const D3D11_RASTERIZER_DESC* desc, ID3D11RasterizerState** state);
+            HRESULT(HX_D3D_CALL* CreateSamplerState)(void* self, const D3D11_SAMPLER_DESC* desc, ID3D11SamplerState** state);
+            HRESULT(HX_D3D_CALL* CreateQuery)(void* self, const D3D11_QUERY_DESC* desc, ID3D11Query** query);
+            HRESULT(HX_D3D_CALL* CreatePredicate)(void* self, const D3D11_QUERY_DESC* desc, ID3D11Predicate** predicate);
+            HRESULT(HX_D3D_CALL* CreateCounter)(void* self, const D3D11_COUNTER_DESC* desc, ID3D11Counter** counter);
+            HRESULT(HX_D3D_CALL* CreateDeferredContext)(void* self, UINT flags, ID3D11DeviceContext** context);
+            HRESULT(HX_D3D_CALL* OpenSharedResource)(void* self, HANDLE resource, const GUID& riid, void** object);
+            HRESULT(HX_D3D_CALL* CheckFormatSupport)(void* self, DXGI_FORMAT format, UINT* support);
+            HRESULT(HX_D3D_CALL* CheckMultisampleQualityLevels)(void* self, DXGI_FORMAT format, UINT sampleCount, UINT* levels);
+            void(HX_D3D_CALL* CheckCounterInfo)(void* self, D3D11_COUNTER_INFO* info);
+            HRESULT(HX_D3D_CALL* CheckCounter)(void* self, const D3D11_COUNTER_DESC* desc, D3D11_COUNTER_TYPE* type, UINT* activeCounters, LPSTR name, UINT* nameLength, LPSTR units, UINT* unitsLength, LPSTR description, UINT* descriptionLength);
+            HRESULT(HX_D3D_CALL* CheckFeatureSupport)(void* self, D3D11_FEATURE feature, void* data, UINT dataSize);
+            HRESULT(HX_D3D_CALL* GetPrivateData)(void* self, const GUID& guid, UINT* dataSize, void* data);
+            HRESULT(HX_D3D_CALL* SetPrivateData)(void* self, const GUID& guid, UINT dataSize, const void* data);
+            HRESULT(HX_D3D_CALL* SetPrivateDataInterface)(void* self, const GUID& guid, IUnknown* data);
+            D3D_FEATURE_LEVEL(HX_D3D_CALL* GetFeatureLevel)(void* self);
+            UINT(HX_D3D_CALL* GetCreationFlags)(void* self);
+            HRESULT(HX_D3D_CALL* GetDeviceRemovedReason)(void* self);
+            void(HX_D3D_CALL* GetImmediateContext)(void* self, ID3D11DeviceContext** context);
+            HRESULT(HX_D3D_CALL* SetExceptionMode)(void* self, UINT flags);
+            UINT(HX_D3D_CALL* GetExceptionMode)(void* self);
+            void(HX_D3D_CALL* GetImmediateContext1)(void* self, ID3D11DeviceContext1** context);
+            HRESULT(HX_D3D_CALL* CreateDeferredContext1)(void* self, UINT flags, ID3D11DeviceContext1** context);
+            HRESULT(HX_D3D_CALL* CreateBlendState1)(void* self, const D3D11_BLEND_DESC1* desc, ID3D11BlendState1** state);
+            HRESULT(HX_D3D_CALL* CreateRasterizerState1)(void* self, const D3D11_RASTERIZER_DESC1* desc, ID3D11RasterizerState1** state);
+            HRESULT(HX_D3D_CALL* CreateDeviceContextState)(void* self, UINT flags, const D3D_FEATURE_LEVEL* levels, UINT levelCount, UINT sdkVersion, const GUID& emulatedInterface, D3D_FEATURE_LEVEL* chosenLevel, ID3DDeviceContextState** state);
+            HRESULT(HX_D3D_CALL* OpenSharedResource1)(void* self, HANDLE resource, const GUID& riid, void** object);
+            HRESULT(HX_D3D_CALL* OpenSharedResourceByName)(void* self, LPCWSTR name, DWORD access, const GUID& riid, void** object);
+            void(HX_D3D_CALL* GetImmediateContext2)(void* self, void** context);
+            HRESULT(HX_D3D_CALL* CreateDeferredContext2)(void* self, UINT flags, void** context);
+            void(HX_D3D_CALL* GetResourceTiling)(void* self, ID3D11Resource* resource, UINT* tileCount, void* packedMipDesc, void* standardTileShape, UINT* subresourceTilingCount, UINT firstSubresource, void* subresourceTilings);
+            HRESULT(HX_D3D_CALL* CheckMultisampleQualityLevels1)(void* self, DXGI_FORMAT format, UINT sampleCount, UINT flags, UINT* qualityLevels);
+            HRESULT(HX_D3D_CALL* CreateTexture2D1)(void* self, const void* desc, const D3D11_SUBRESOURCE_DATA* initialData, void** texture);
+            HRESULT(HX_D3D_CALL* CreateTexture3D1)(void* self, const void* desc, const D3D11_SUBRESOURCE_DATA* initialData, void** texture);
+            HRESULT(HX_D3D_CALL* CreateRasterizerState2)(void* self, const D3D11_RASTERIZER_DESC2* desc, ID3D11RasterizerState** state);
+            HRESULT(HX_D3D_CALL* CreateShaderResourceView1)(void* self, ID3D11Resource* resource, const void* desc, void** view);
+            HRESULT(HX_D3D_CALL* CreateUnorderedAccessView1)(void* self, ID3D11Resource* resource, const void* desc, void** view);
+            HRESULT(HX_D3D_CALL* CreateRenderTargetView1)(void* self, ID3D11Resource* resource, const void* desc, void** view);
+            HRESULT(HX_D3D_CALL* CreateQuery1)(void* self, const void* desc, void** query);
+            void(HX_D3D_CALL* GetImmediateContext3)(void* self, void** context);
+            HRESULT(HX_D3D_CALL* CreateDeferredContext3)(void* self, UINT flags, void** context);
+            void(HX_D3D_CALL* WriteToSubresource)(void* self, ID3D11Resource* resource, UINT subresource, const D3D11_BOX* box, const void* data, UINT rowPitch, UINT depthPitch);
+            void(HX_D3D_CALL* ReadFromSubresource)(void* self, void* data, UINT rowPitch, UINT depthPitch, ID3D11Resource* resource, UINT subresource, const D3D11_BOX* box);
+        };
+
+        HRESULT CreateTexture2D1(const void* desc, const D3D11_SUBRESOURCE_DATA* initialData, void** texture) { return static_cast<const Vtbl*>(vtbl_)->CreateTexture2D1(this, desc, initialData, texture); }
+        HRESULT CreateTexture3D1(const void* desc, const D3D11_SUBRESOURCE_DATA* initialData, void** texture) { return static_cast<const Vtbl*>(vtbl_)->CreateTexture3D1(this, desc, initialData, texture); }
+        HRESULT CreateRasterizerState2(const D3D11_RASTERIZER_DESC2* desc, ID3D11RasterizerState** state) { return static_cast<const Vtbl*>(vtbl_)->CreateRasterizerState2(this, desc, state); }
+        HRESULT CreateShaderResourceView1(ID3D11Resource* resource, const void* desc, void** view) { return static_cast<const Vtbl*>(vtbl_)->CreateShaderResourceView1(this, resource, desc, view); }
+        HRESULT CreateUnorderedAccessView1(ID3D11Resource* resource, const void* desc, void** view) { return static_cast<const Vtbl*>(vtbl_)->CreateUnorderedAccessView1(this, resource, desc, view); }
+        HRESULT CreateRenderTargetView1(ID3D11Resource* resource, const void* desc, void** view) { return static_cast<const Vtbl*>(vtbl_)->CreateRenderTargetView1(this, resource, desc, view); }
+        HRESULT CreateQuery1(const void* desc, void** query) { return static_cast<const Vtbl*>(vtbl_)->CreateQuery1(this, desc, query); }
+        void GetImmediateContext3(void** context) { static_cast<const Vtbl*>(vtbl_)->GetImmediateContext3(this, context); }
+        HRESULT CreateDeferredContext3(UINT flags, void** context) { return static_cast<const Vtbl*>(vtbl_)->CreateDeferredContext3(this, flags, context); }
+        void WriteToSubresource(ID3D11Resource* resource, UINT subresource, const D3D11_BOX* box, const void* data, UINT rowPitch, UINT depthPitch) { static_cast<const Vtbl*>(vtbl_)->WriteToSubresource(this, resource, subresource, box, data, rowPitch, depthPitch); }
+        void ReadFromSubresource(void* data, UINT rowPitch, UINT depthPitch, ID3D11Resource* resource, UINT subresource, const D3D11_BOX* box) { static_cast<const Vtbl*>(vtbl_)->ReadFromSubresource(this, data, rowPitch, depthPitch, resource, subresource, box); }
     };
 
     struct ID3DUserDefinedAnnotation : IUnknown

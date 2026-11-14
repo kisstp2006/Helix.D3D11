@@ -122,6 +122,9 @@ ENUMS = [
                                ("DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020", 12), ("DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P2020", 17)]),
     ("DXGI_FEATURE", [("DXGI_FEATURE_PRESENT_ALLOW_TEARING", 0)]),
     ("DXGI_ADAPTER_FLAG", [("DXGI_ADAPTER_FLAG_NONE", 0), ("DXGI_ADAPTER_FLAG_REMOTE", 1), ("DXGI_ADAPTER_FLAG_SOFTWARE", 2)]),
+    ("D3D11_CONSERVATIVE_RASTERIZATION_MODE", [("D3D11_CONSERVATIVE_RASTERIZATION_MODE_OFF", 0), ("D3D11_CONSERVATIVE_RASTERIZATION_MODE_ON", 1)]),
+    ("D3D11_CONSERVATIVE_RASTERIZATION_TIER", seq("D3D11_CONSERVATIVE_RASTERIZATION_", ["NOT_SUPPORTED", "TIER_1", "TIER_2", "TIER_3"])),
+    ("D3D11_TILED_RESOURCES_TIER", seq("D3D11_TILED_RESOURCES_", ["NOT_SUPPORTED", "TIER_1", "TIER_2", "TIER_3"])),
 ]
 
 CONSTANTS = [
@@ -316,4 +319,12 @@ STRUCTS = [
                                           ("BOOL", "MapNoOverwriteOnDynamicBufferSRV"), ("BOOL", "MultisampleRTVWithForcedSampleCountOne"),
                                           ("BOOL", "SAD4ShaderInstructions"), ("BOOL", "ExtendedDoublesShaderInstructions"),
                                           ("BOOL", "ExtendedResourceSharing")]),
+    ("D3D11_RASTERIZER_DESC2", [("D3D11_FILL_MODE", "FillMode"), ("D3D11_CULL_MODE", "CullMode"), ("BOOL", "FrontCounterClockwise"),
+                                ("INT", "DepthBias"), ("FLOAT", "DepthBiasClamp"), ("FLOAT", "SlopeScaledDepthBias"), ("BOOL", "DepthClipEnable"),
+                                ("BOOL", "ScissorEnable"), ("BOOL", "MultisampleEnable"), ("BOOL", "AntialiasedLineEnable"),
+                                ("UINT", "ForcedSampleCount"), ("D3D11_CONSERVATIVE_RASTERIZATION_MODE", "ConservativeRaster")]),
+    ("D3D11_FEATURE_DATA_D3D11_OPTIONS2", [("BOOL", "PSSpecifiedStencilRefSupported"), ("BOOL", "TypedUAVLoadAdditionalFormats"), ("BOOL", "ROVsSupported"),
+                                           ("D3D11_CONSERVATIVE_RASTERIZATION_TIER", "ConservativeRasterizationTier"),
+                                           ("D3D11_TILED_RESOURCES_TIER", "TiledResourcesTier"), ("BOOL", "MapOnDefaultTextures"),
+                                           ("BOOL", "StandardSwizzle"), ("BOOL", "UnifiedMemoryArchitecture")]),
 ]
